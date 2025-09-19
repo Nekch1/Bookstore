@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{title_page}} {% endblock %}
+
+{% block content %}
+<section class="catalog-section">
+  <div class="catalog-container">
+    <div class="filter-panel">
+      <form method="get">
+        <div class="filter-items">
+          <h3>Сортировать</h3>
+          <label for="sort">По:</label>
+          <select id="sort" name="sort">
+            <option value="" disabled selected hidden>...</option>
+            <option value="price_asc">Цена ↑</option>
+            <option value="price_desc">Цена ↓</option>
+            <option value="title_asc">Название A→Z</option>
+            <option value="title_desc">Название Z→A</option>
+          </select>
+        </div>
+        <div class="filter-items">
+          <h3>Жанры</h3>
+          <details>
+            <summary>Выберите жанры</summary>
+            <div class="genres">
+              <label><input type="checkbox" name="genre" value="fantasy"> Фэнтези</label><br>
+              <label><input type="checkbox" name="genre" value="mystery"> Детектив</label><br>
+              <label><input type="checkbox" name="genre" value="romance"> Роман</label><br>
+              <label><input type="checkbox" name="genre" value="science"> Научная</label>
+            </div>
+          </details>
+        </div>
+        <div class="btn-wrapper">
+          <button class="btn-primary " type="submit">Применить</button>
+        </div>
+      </form>
+    </div>
+    <di class="books-list">
+      <div class="book-card">
+        <img src="{% static 'img/book1.webp' %}" alt="Властелин колец">
+        <h4 class="book-title">Властелин колец</h4>
+        <p class="book-author">Дж. Р. Р. Толкин</p>
+        <p class="book-price">1200 ₽</p>
+        <button class="btn-primary">Добавить в корзину</button>
+      </div>
+      <div class="book-card">
+        <img src="{% static 'img/book2.jpg' %}" alt="Шерлок Холмс">
+        <h4 class="book-title">Шерлок Холмс</h4>
+        <p class="book-author">Артур Конан Дойл</p>
+        <p class="book-price">800 ₽</p>
+        <button class="btn-primary">Добавить в корзину</button>
+      </div>
+      <div class="book-card">
+        <img src="{% static 'img/book3.webp' %}" alt="Гордость и предубеждение">
+        <h4 class="book-title">Гордость и предубеждение</h4>
+        <p class="book-author">Джейн Остин</p>
+        <p class="book-price">950 ₽</p>
+        <button class="btn-primary">Добавить в корзину</button>
+      </div>
+      <div class="book-card">
+        <img src="{% static 'img/book4.jpg' %}" alt="Краткая история времени">
+        <h4 class="book-title">Краткая история времени</h4>
+        <p class="book-author">Стивен Хокинг</p>
+        <p class="book-price">1100 ₽</p>
+        <button class="btn-primary">Добавить в корзину</button>
+      </div>
+      <div class="book-card">
+        <img src="{% static 'img/book5.jpg' %}" alt="Краткая история времени">
+        <h4 class="book-title">Марсианские войны  </h4>
+        <p class="book-author">Эдгар Берроуз</p>
+        <p class="book-price">1000 ₽</p>
+        <button class="btn-primary">Добавить в корзину</button>
+      </div>
+    </di>
+  </div>
+</section>
+{% endblock %}
