@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{title_page}} {% endblock %}
+
+{% block content %}
+  <section class="contact-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <img src="{% static 'img/location-map.jpg' %}" alt="">
+        </div>
+        <div class="col-6 contact-block">
+          <div class="contact-info">
+            <p>Адрес магазина:</p>
+            <p>г. Москва, ул. Литературная, д. 10</p>
+          </div>
+          <div class="contact-info">
+            <p>Телефон:</p>
+            <p>+7 (495) 123-45-67</p>
+          </div>
+          <div class="contact-info">
+            <p>Почта:</p>
+            <p>bookstore@mail.ru</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
