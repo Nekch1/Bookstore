@@ -20,5 +20,9 @@ from client import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index_page)
+    path('', views.index_page, name='home'),
+    path('catalog/', views.catalog_page, name="catalog"),
+    path('contacts/', views.contacts_page, name="contacts"),
+    path('login/', views.contacts_page, name="login"),
+    path('register/', views.contacts_page, name="register"),
 ]
