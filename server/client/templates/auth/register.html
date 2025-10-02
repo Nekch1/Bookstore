@@ -6,57 +6,77 @@
 {% block content%}
     <section class="login-section">
         <div class="container">
-            <form class="auth-form">
-                <h1 class="auth-title">Зарегестрироваться</h1>
+            <form class="auth-form" id="authForm">
+                <h1 class="auth-title">Зарегистрироваться</h1>
 
                 <div class="row">
                     <div class="input-block col-6">
                         <label for="username" class="auth-label">Имя:</label>
-                        <input type="text" name="" id="username" class="auth-input">
+                        <input type="text" name="" id="username" class="auth-input" required>
                     </div>
                     
                     <div class="input-block col-6">
                         <label for="surname" class="auth-label">Фамилия:</label>
-                        <input type="text" name="" id="surname" class="auth-input">
+                        <input type="text" name="" id="surname" class="auth-input" required>
                     </div>
                 </div>
                 
                 <div class="input-block">
                     <label for="patronymic" class="auth-label">Отчество:</label>
-                    <input type="text" name="" id="patronymic" class="auth-input">
+                    <input type="text" name="" id="patronymic" class="auth-input" required>
                 </div>
                 
                 <div class="input-block">
                     <label for="login" class="auth-label">Логин:</label>
-                    <input type="text" name="" id="login" class="auth-input">
+                    <input type="text" name="" id="login" class="auth-input" required>
                 </div>
                 
                 <div class="input-block">
                     <label for="email" class="auth-label">Почта:</label>
-                    <input type="email" name="" id="email" class="auth-input">
+                    <input type="email" name="" id="email" class="auth-input" required>
                 </div>
                 
                 <div class="row">
                     <div class="input-block col-6">
                         <label for="password" class="auth-label">Пароль:</label>
-                        <input type="password" name="" id="password" class="auth-input">
+                        <input type="password" name="" id="password" class="auth-input" required>
                     </div>
                     
                     <div class="input-block col-6">
-                        <label for="password" class="auth-label">Подтвердите пароль:</label>
-                        <input type="text" name="" id="password" class="auth-input">
+                        <label for="confirmPassword" class="auth-label">Подтвердите пароль:</label>
+                        <input type="password" name="" id="confirmPassword" class="auth-input" required>
                     </div>
                 </div>
 
                 <div class="rules-block">
-                    <input type="checkbox" id="rulesCheckbox" class="rules-agree">
+                    <input type="checkbox" id="rulesCheckbox" class="rules-agree" required>
                     <label for="rulesCheckbox" class="auth-label ">Согласен с правилами регистрации</label>
                 </div>
 
-                <button class="auth-button">Зарегестрироваться</button>
+                <button class="auth-button">Зарегистрироваться</button>
 
                 <div class="auth-link">Есть аккаунт? <a href="{% url 'login' %}">Войти</a></div>
             </form>
         </div>
     </section>
+        
+    <div class="error-block">
+        <div class="error-message" id="error"></div>
+    </div>
+    <script>
+        document.getElementById('authForm').addEventListener('submit', (e)=>{
+            e.preventDefault();
+
+            let passwordValue = document.getElementById('password').value;
+            let confirmPasswordValue = document.getElementById('confirmPassword').value;
+            
+            let divError = document.getElementById('error')
+
+            let input = document.getElementsByTagName('input')
+
+            if (passwordValue != confirmPasswordValue){
+                divError.textContent = 'Пароли не совпадают'
+            }
+        })
+    </script>
 {% endblock %}
