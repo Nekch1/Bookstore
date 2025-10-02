@@ -331,6 +331,18 @@ section{
     font-size: 22px;
 }
 
+.rules-block{
+    display: flex;
+    align-items: center;
+}
+
+input[type='checkbox']{
+    width: 20px;
+    height: 20px;
+    accent-color: #4F55E9;
+    margin-right: 5px;
+}
+
 
 footer{
     background-color: #f5f9ff;
