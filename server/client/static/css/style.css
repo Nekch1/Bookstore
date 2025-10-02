@@ -343,6 +343,12 @@ input[type='checkbox']{
     margin-right: 5px;
 }
 
+.error-message{
+    text-align: center;
+    color: red;
+    font-size: 20px;
+}
+
 
 footer{
     background-color: #f5f9ff;
