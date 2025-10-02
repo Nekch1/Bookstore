@@ -1,0 +1,28 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title%} {{title_page}} {% endblock%}
+
+{% block content%}
+    <section class="login-section">
+        <div class="container">
+            <form class="auth-form">
+                <h1 class="auth-title">Войти</h1>
+
+                <div class="input-block">
+                    <label for="login" class="auth-label">Логин:</label>
+                    <input type="text" name="" id="login" class="auth-input">
+                </div>
+                
+                <div class="input-block">
+                    <label for="password" class="auth-label">Пароль:</label>
+                    <input type="password" name="" id="password" class="auth-input">
+                </div>
+
+                <button class="auth-button">Войти</button>
+
+                <div class="auth-link">Нет аккаунта? <a href="{% url 'register' %}">Зарегестрироваться</a></div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

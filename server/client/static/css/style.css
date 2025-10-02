@@ -209,7 +209,7 @@ section{
     flex: 1;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    gap: 30px;
 }
 
 .book-card {
@@ -218,7 +218,7 @@ section{
   padding: 20px;
   background: #fff;
   transition: transform 0.2s, box-shadow 0.2s;
-    text-align: center;
+  text-align: center;
 }
 
 .book-card:hover {
@@ -276,6 +276,61 @@ section{
 .filter-items{
     margin-bottom: 30px;
 }
+
+.login-section .container{
+    max-width:700px ;
+}
+
+.auth-form{
+    border: 3px solid #272C7D;
+    border-radius: 40px;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap:30px;
+}
+
+.auth-label{
+    font-size: 20px;
+}
+
+.input-block{
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-title{
+    text-align: center;
+}
+
+.auth-input{
+    border: 3px solid #272C7D;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.auth-button{
+    display: block;
+    margin: 0 auto;
+    padding: 5px 70px;
+    border: none;
+    background-color: #4F55E9;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 22px;
+    transition: all 0.2s ease;
+}
+
+.auth-button:hover{
+    background-color: #272C7D;
+    transition: all 0.2s ease;
+}
+
+.auth-link{
+    text-align: center;
+    font-size: 22px;
+}
+
 
 footer{
     background-color: #f5f9ff;

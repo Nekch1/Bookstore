@@ -23,10 +23,10 @@ def login_page(request):
     context = {
         'title_page' : 'Авторизация'
     }
-    return render(request,"login.html", context)
+    return render(request,"auth/login.html", context)
 
 def register_page(request):
     context = {
         'title_page' : 'Регистрация'
     }
-    return render(request,"register.html", context)
+    return render(request,"auth/register.html", context)
