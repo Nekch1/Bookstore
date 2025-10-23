@@ -12,11 +12,12 @@
           <h3>Сортировать</h3>
           <label for="sort">По:</label>
           <select id="sort" name="sort">
-            <option value="" disabled selected hidden>...</option>
+            <option value="">...</option>
             <option value="price_asc">Цена ↑</option>
             <option value="price_desc">Цена ↓</option>
             <option value="title_asc">Название A→Z</option>
             <option value="title_desc">Название Z→A</option>
+            <option value="year">Год</option>
           </select>
         </div>
         <div class="filter-items">
@@ -24,55 +25,35 @@
           <details>
             <summary>Выберите жанры</summary>
             <div class="genres">
-              <label><input type="checkbox" name="genre" value="fantasy"> Фэнтези</label><br>
-              <label><input type="checkbox" name="genre" value="mystery"> Детектив</label><br>
-              <label><input type="checkbox" name="genre" value="romance"> Роман</label><br>
-              <label><input type="checkbox" name="genre" value="science"> Научная</label>
+              {% for g in genres %}
+                <label>
+                  <input type="checkbox" name="genre" value="{{ g.name }}"
+                    {% if g.name in selected_genres %}checked{% endif %}>
+                  {{ g.name }}
+                </label><br>
+              {% endfor %}
             </div>
           </details>
         </div>
         <div class="btn-wrapper">
-          <button class="btn-primary " type="submit">Применить</button>
+          <button class="btn-primary" type="submit">Применить</button>
         </div>
       </form>
     </div>
-    <di class="books-list">
-      <div class="book-card">
-        <img src="{% static 'img/book1.webp' %}" alt="Властелин колец">
-        <h4 class="book-title">Властелин колец</h4>
-        <p class="book-author">Дж. Р. Р. Толкин</p>
-        <p class="book-price">1200 ₽</p>
-        <button class="btn-primary">Добавить в корзину</button>
-      </div>
-      <div class="book-card">
-        <img src="{% static 'img/book2.jpg' %}" alt="Шерлок Холмс">
-        <h4 class="book-title">Шерлок Холмс</h4>
-        <p class="book-author">Артур Конан Дойл</p>
-        <p class="book-price">800 ₽</p>
-        <button class="btn-primary">Добавить в корзину</button>
-      </div>
-      <div class="book-card">
-        <img src="{% static 'img/book3.webp' %}" alt="Гордость и предубеждение">
-        <h4 class="book-title">Гордость и предубеждение</h4>
-        <p class="book-author">Джейн Остин</p>
-        <p class="book-price">950 ₽</p>
-        <button class="btn-primary">Добавить в корзину</button>
-      </div>
-      <div class="book-card">
-        <img src="{% static 'img/book4.jpg' %}" alt="Краткая история времени">
-        <h4 class="book-title">Краткая история времени</h4>
-        <p class="book-author">Стивен Хокинг</p>
-        <p class="book-price">1100 ₽</p>
-        <button class="btn-primary">Добавить в корзину</button>
-      </div>
-      <div class="book-card">
-        <img src="{% static 'img/book5.jpg' %}" alt="Краткая история времени">
-        <h4 class="book-title">Марсианские войны  </h4>
-        <p class="book-author">Эдгар Берроуз</p>
-        <p class="book-price">1000 ₽</p>
-        <button class="btn-primary">Добавить в корзину</button>
-      </div>
-    </di>
+
+    <div class="books-list">
+      {% for b in books %}
+        <div class="book-card">
+          <img src="{{ b.image.url }}" alt="{{ b.title }}">
+          <h4 class="book-title">{{ b.title }}</h4>
+          <p class="book-author">{{ b.author }}</p>
+          <p class="book-price">{{ b.price }} ₽</p>
+          <a href="{% url 'book_detail' b.id %}" class="btn-primary">Подробнее</a>
+        </div>
+      {% empty %}
+        <p>Книги не найдены.</p>
+      {% endfor %}
+    </div>
   </div>
 </section>
 {% endblock %}

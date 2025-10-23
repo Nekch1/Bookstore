@@ -1,0 +1,54 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1>Админ-панель</h1>
+    <section class="admin-section">
+
+  <!-- Создание жанра -->
+  <h2>Добавить жанр</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="text" name="genre_name" placeholder="Название жанра" required>
+    <button type="submit" name="genre_submit">Добавить жанр</button>
+  </form>
+
+  <hr>
+
+  <!-- Создание книги -->
+  <h2>Добавить книгу</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Название" required><br>
+    <textarea name="description" placeholder="Описание" required></textarea><br>
+    <input type="text" name="author" placeholder="Автор" required><br>
+    <input type="number" name="price" placeholder="Цена" step="0.01" required><br>
+    <input type="text" name="country" placeholder="Страна" required><br>
+    <input type="number" name="year" placeholder="Год" required><br>
+    <input type="file" name="image" accept="image/*" required><br>
+
+    <label>Жанры:</label><br>
+    {% for genre in genres %}
+      <label>
+        <input type="checkbox" name="genres" value="{{ genre.id }}"> {{ genre.name }}
+      </label><br>
+    {% empty %}
+      <p>Жанров пока нет.</p>
+    {% endfor %}
+    <button type="submit" name="book_submit">Добавить книгу</button>
+  </form>
+
+  <hr>
+
+  <!-- Список книг -->
+  <h2>Список книг</h2>
+  {% for book in books %}
+    <div>
+      <strong>{{ book.title }}</strong> — {{ book.author }} ({{ book.year }})  
+      | {{ book.price }} ₽  
+      | жанры: {{ book.genre.all|join:", " }}
+    </div>
+  {% empty %}
+    <p>Пока нет добавленных книг.</p>
+  {% endfor %}
+</section>
+{%endblock%}

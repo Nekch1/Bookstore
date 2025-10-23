@@ -1,0 +1,27 @@
+{% extends './base.html' %}
+
+{% block title %} {{ book.title }} {% endblock %}
+
+{% block content %}
+<section class="book-detail">
+  <div class="container book-detail-container">
+    <div class="book-detail-image">
+      <img src="{{ book.image.url }}" alt="{{ book.title }}">
+    </div>
+    <div class="book-detail-info">
+      <h2 class="book-detail-title">{{ book.title }}</h2>
+      <p class="book-detail-author"><strong>Автор:</strong> {{ book.author }}</p>
+      <p class="book-detail-genre"><strong>Жанр:</strong> 
+      {% for gen in book.genre.all %}
+        {{gen.name}}{% if not forloop.last %}, {% endif %}
+      {%endfor%}
+      </p>
+      <p class="book-detail-price"><strong>Цена:</strong> {{ book.price }} ₽</p>
+      <p class="book-detail-year"><strong>Год:</strong> {{ book.year }}</p>
+      <p class="book-detail-country"><strong>Страна:</strong> {{ book.country }}</p>
+      <p class="book-detail-description">{{ book.description }}</p>
+      <button class="btn-primary book-detail-btn">В корзину</button>
+    </div>
+  </div>
+</section>
+{% endblock %}

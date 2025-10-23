@@ -8,7 +8,6 @@
 
 *{
     margin:0;
-    /* overflow: hidden; */
 }
 
 body{
@@ -75,10 +74,6 @@ nav{
     z-index: 1;
     border-radius: 10px;
 }
-
-/* main{
-    margin: 100px 0;
-} */
 
 section{
     margin: 100px 0;
@@ -183,7 +178,7 @@ section{
 }
 
 .filter-panel {
-  width: 250px;
+  width: 280px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 12px;
@@ -206,19 +201,20 @@ section{
 }
 
 .books-list {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;           /* меняем на flex */
+    flex-wrap: wrap;         /* перенос карточек на новую строку */
     gap: 30px;
+    justify-content: start; /* центрируем, если мало карточек */
 }
 
 .book-card {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  background: #fff;
-  transition: transform 0.2s, box-shadow 0.2s;
-  text-align: center;
+    width: 380px;            /* фиксированная ширина */
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    background: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
 }
 
 .book-card:hover {
@@ -252,6 +248,60 @@ section{
 .book-card h4 {
   font-size: 1.1rem;
   margin-bottom: 5px;
+}
+
+.book-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 50px 0;
+}
+
+.book-detail-image img {
+  width: 400px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.book-detail-info {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.book-detail-title {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.book-detail-author,
+.book-detail-price,
+.book-detail-year,
+.book-detail-country,
+.book-detail-genre {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.book-detail-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  margin: 10px 0 20px;
+}
+
+.book-detail-btn {
+  width: 180px;
+  padding: 10px 20px;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 10px;
 }
 
 
@@ -378,4 +428,6 @@ footer{
 
 .btn-to-up:hover svg {
     fill:var(--primary-color) ;
-}
+} 
+
+
