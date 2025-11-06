@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
+from django.views.decorators.http import require_GET
 from django.views.decorators.csrf import csrf_exempt
-from .models import CustomUser, Books, Genre
+from .models import CustomUser, Books, Genre, CartItem, Order, OrderItem
+from decimal import Decimal
 
 # Create your views here.
 def index_page(request):
@@ -116,7 +119,7 @@ def logout_func(request):
 @login_required
 def admin_page(request):
     if request.user.role != 'admin':
-        return redirect('home')  # доступ только для админа
+        return redirect('home')  
 
     # добавление жанра
     if request.method == "POST" and 'genre_submit' in request.POST:
@@ -134,6 +137,7 @@ def admin_page(request):
         country = request.POST.get('country')
         year = request.POST.get('year')
         image = request.FILES.get('image')
+        quantity = request.POST.get('quantity')
         genres = request.POST.getlist('genres')
 
         book = Books.objects.create(
@@ -143,7 +147,8 @@ def admin_page(request):
             price=price,
             country=country,
             year=year,
-            image=image
+            image=image,
+            quantity=quantity
         )
 
         if genres:
@@ -163,5 +168,102 @@ def admin_page(request):
 
 def book_detail_page(request, book_id):
     book = Books.objects.get(id=book_id)
-    context = {'book': book}
+    in_cart = False
+
+    if request.user.is_authenticated:
+        in_cart = CartItem.objects.filter(user=request.user, book=book).exists()
+
+    context = {
+        'book': book,
+        'in_cart': in_cart
+    }
     return render(request, 'book_detail.html', context)
+
+
+
+@login_required
+def add_to_cart(request, book_id):
+    book = Books.objects.get(id=book_id)
+    cart_item, created = CartItem.objects.get_or_create(user=request.user, book=book)
+
+    if not created:  # если элемент уже был в корзине
+        if cart_item.quantity < book.quantity:
+            cart_item.quantity += 1
+            cart_item.save()
+        else:
+            return JsonResponse({"error": "Недостаточно книг в наличии"}, status=400)
+    # если создан — quantity уже = 1, ничего не трогаем
+
+    return redirect('cart')
+
+
+@login_required
+def cart_page(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    total = sum([item.total_price() for item in cart_items])
+    return render(request, "cart.html", {"cart_items": cart_items, "total": total})
+
+
+@login_required
+@require_GET
+def update_cart_quantity(request, item_id):
+    item = CartItem.objects.get(id=item_id, user=request.user)
+    action = request.GET.get('action')
+
+    if action == 'plus' and item.quantity < item.book.quantity:
+        item.quantity += 1
+    elif action == 'minus' and item.quantity > 1:
+        item.quantity -= 1
+
+    item.save()
+
+    # Считаем общую сумму корзины и возвращаем JSON
+    cart_items = CartItem.objects.filter(user=request.user)
+    total = sum(i.total_price() for i in cart_items)
+
+    return JsonResponse({
+        'quantity': item.quantity,
+        'item_total': item.total_price(),
+        'cart_total': total
+    })
+
+
+@login_required
+def remove_from_cart(request, item_id):
+    CartItem.objects.filter(id=item_id, user=request.user).delete()
+    return redirect('cart')
+
+@login_required
+def create_order(request):
+    if request.method == "POST":
+        password = request.POST.get('password')
+        user = authenticate(username=request.user.username, password=password)
+        if user is None:
+            return JsonResponse({'error': 'Неверный пароль'}, status=400)
+
+        cart_items = CartItem.objects.filter(user=request.user)
+        if not cart_items.exists():
+            return JsonResponse({'error': 'Корзина пуста'}, status=400)
+
+        total = sum(item.total_price() for item in cart_items)
+        order = Order.objects.create(user=request.user, total_amount=total)
+
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                book=item.book,
+                quantity=item.quantity,
+                price=item.book.price
+            )
+            item.book.quantity -= item.quantity
+            item.book.save()
+
+        cart_items.delete()
+
+        return JsonResponse({'success': True})
+
+@login_required
+def order_confirm_page(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    total = sum(item.total_price() for item in cart_items)
+    return render(request, "order_confirm.html", {"cart_items": cart_items, "total": total})

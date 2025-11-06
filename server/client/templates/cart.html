@@ -1,0 +1,81 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<section class="cart-section">
+  <div class="container">
+    <h1 class="auth-title">Ваша корзина</h1>
+
+    {% if cart_items %}
+      <div class="cart-list">
+        {% for item in cart_items %}
+          <div class="cart-card row">
+            <div class="cart-img col-1">
+                <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}">
+            </div>
+            <div class="col-8 cart-info">
+                <div class="cart-title">{{ item.book.title }}</div>
+                <div class="cart-author">{{ item.book.author }}</div>
+                <div class="cart-price"> {{ item.book.price }} ₽</div>
+            </div>
+            <div class="quantity-controls col-2" data-item-id="{{ item.id }}">
+                <button type="button" class="btn-qty minus">−</button>
+                    <span class="qty">{{ item.quantity }}</span>
+                <button type="button" class="btn-qty plus">+</button>
+            </div>
+            <div class="col-1 cart-remove">
+                <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn">Удалить</a> 
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="cart-summary">
+        <h3>Итоговая стоимость: <span>{{ total }} ₽</span></h3>
+        <a href="{% url 'order_confirm' %}" class="btn-primary">Оформить заказ</a>
+      </div>
+
+    {% else %}
+      <p class="empty-cart">Ваша корзина пуста</p>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.quantity-controls').forEach(control => {
+    const itemId = control.dataset.itemId;
+    const minus = control.querySelector('.minus');
+    const plus = control.querySelector('.plus');
+    const qty = control.querySelector('.qty');
+    const cartTotal = document.querySelector('.cart-summary span'); // итоговая сумма
+
+    async function updateQuantity(action) {
+      const response = await fetch(`/cart/update/${itemId}/?action=${action}`);
+      const data = await response.json();
+
+      // Обновляем количество товара
+      qty.textContent = data.quantity;
+
+      // Обновляем только общую сумму корзины
+      cartTotal.textContent = `${data.cart_total} ₽`;
+    }
+
+    minus.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateQuantity('minus');
+    });
+
+    plus.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateQuantity('plus');
+    });
+  });
+});
+</script>
+
+
+
+{% endblock %}

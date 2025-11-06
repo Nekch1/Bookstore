@@ -6,45 +6,46 @@
 {% block content%}
     <section class="login-section">
         <div class="container">
-            <form class="auth-form">
+            <form class="auth-form" method="POST">
+                {% csrf_token %}
                 <h1 class="auth-title">Зарегестрироваться</h1>
 
                 <div class="row">
                     <div class="input-block col-6">
-                        <label for="username" class="auth-label">Имя:</label>
-                        <input type="text" name="" id="username" class="auth-input">
+                        <label for="name" class="auth-label">Имя:</label>
+                        <input type="text" name="name" id="name" class="auth-input">
                     </div>
                     
                     <div class="input-block col-6">
                         <label for="surname" class="auth-label">Фамилия:</label>
-                        <input type="text" name="" id="surname" class="auth-input">
+                        <input type="text" name="surname" id="surname" class="auth-input">
                     </div>
                 </div>
                 
                 <div class="input-block">
                     <label for="patronymic" class="auth-label">Отчество:</label>
-                    <input type="text" name="" id="patronymic" class="auth-input">
+                    <input type="text" name="patronymic" id="patronymic" class="auth-input">
                 </div>
                 
                 <div class="input-block">
                     <label for="login" class="auth-label">Логин:</label>
-                    <input type="text" name="" id="login" class="auth-input">
+                    <input type="text" name="login" id="login" class="auth-input">
                 </div>
                 
                 <div class="input-block">
                     <label for="email" class="auth-label">Почта:</label>
-                    <input type="email" name="" id="email" class="auth-input">
+                    <input type="email" name="email" id="email" class="auth-input">
                 </div>
                 
                 <div class="row">
                     <div class="input-block col-6">
                         <label for="password" class="auth-label">Пароль:</label>
-                        <input type="password" name="" id="password" class="auth-input">
+                        <input type="password" name="password" id="password" class="auth-input">
                     </div>
                     
                     <div class="input-block col-6">
-                        <label for="password" class="auth-label">Подтвердите пароль:</label>
-                        <input type="text" name="" id="password" class="auth-input">
+                        <label for="confirmPassword" class="auth-label">Подтвердите пароль:</label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" class="auth-input">
                     </div>
                 </div>
 

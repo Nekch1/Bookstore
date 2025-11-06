@@ -13,6 +13,15 @@ urlpatterns = [
     path('logout/', views.logout_func, name="logout"),
     path('adminDash/', views.admin_page, name="admin_dash"),
     path('book/<int:book_id>/', views.book_detail_page, name='book_detail'),
+    
+    path('cart/', views.cart_page, name='cart'),
+    path('cart/add/<int:book_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('cart/update/<int:item_id>/', views.update_cart_quantity, name='update_cart_quantity'),
+
+    # 🧾 Заказ
+    path('order/confirm/', views.order_confirm_page, name='order_confirm'),
+    path('order/create/', views.create_order, name='create_order'),
 ]
 
 if settings.DEBUG:

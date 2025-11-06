@@ -20,7 +20,18 @@
       <p class="book-detail-year"><strong>Год:</strong> {{ book.year }}</p>
       <p class="book-detail-country"><strong>Страна:</strong> {{ book.country }}</p>
       <p class="book-detail-description">{{ book.description }}</p>
-      <button class="btn-primary book-detail-btn">В корзину</button>
+      {% if user.is_authenticated %}
+        {% if in_cart %}
+          <a href="{% url 'cart' %}" class="btn-secondary book-detail-btn">Уже в корзине</a>
+        {% else %}
+          <form action="{% url 'add_to_cart' book.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary book-detail-btn">В корзину</button>
+          </form>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'login' %}" class="btn-primary book-detail-btn">Войдите, чтобы купить</a>
+      {% endif %}
     </div>
   </div>
 </section>

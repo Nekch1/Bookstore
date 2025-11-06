@@ -24,6 +24,7 @@
     <input type="number" name="price" placeholder="Цена" step="0.01" required><br>
     <input type="text" name="country" placeholder="Страна" required><br>
     <input type="number" name="year" placeholder="Год" required><br>
+    <input type="number" name="quantity" placeholder="Количество в наличии" min="0" required><br> 
     <input type="file" name="image" accept="image/*" required><br>
 
     <label>Жанры:</label><br>
@@ -44,7 +45,8 @@
   {% for book in books %}
     <div>
       <strong>{{ book.title }}</strong> — {{ book.author }} ({{ book.year }})  
-      | {{ book.price }} ₽  
+      | {{ book.price }} ₽ 
+      | В наличии: {{ book.quantity }} шт. 
       | жанры: {{ book.genre.all|join:", " }}
     </div>
   {% empty %}
