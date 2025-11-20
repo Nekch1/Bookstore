@@ -9,7 +9,10 @@ urlpatterns = [
     path('contacts/', views.contacts_page, name="contacts"),
     path('login/', views.login_page, name="login"),
     path('register/', views.register_page, name="register"),
+    
     path('profile/', views.profile_page, name="profile"),
+    path('profile/delete-order/<int:order_id>/', views.delete_order, name='delete_order'),
+
     path('logout/', views.logout_func, name="logout"),
     path('adminDash/', views.admin_page, name="admin_dash"),
     path('book/<int:book_id>/', views.book_detail_page, name='book_detail'),
@@ -19,9 +22,10 @@ urlpatterns = [
     path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('cart/update/<int:item_id>/', views.update_cart_quantity, name='update_cart_quantity'),
 
-    # 🧾 Заказ
     path('order/confirm/', views.order_confirm_page, name='order_confirm'),
     path('order/create/', views.create_order, name='create_order'),
+
+
 ]
 
 if settings.DEBUG:

@@ -109,8 +109,7 @@ section{
 .title{
     text-align: center !important; 
     text-transform: uppercase;
-    margin-bottom: 30px;
-    color:var(--primary-color)
+    margin-top: 50px;
 }
 
 .photo-layout {
@@ -537,6 +536,36 @@ input[type='checkbox']{
 .btn-confirm:hover {
   background: var(--primary-color);
   transition: all 0.3s ease;
+}
+
+.order-card{
+    margin-bottom: 15px;
+}
+
+.order-number{
+    margin-bottom: 5px;
+}
+
+.order-info{
+    border: 3px solid var(--primary-color);
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px 0;    
+    display: flex;
+    align-items: center;    
+}
+
+.order-right{
+    border-left: 3px solid var(--primary-color);
+}
+
+.order-delete{
+    padding: 3px 10px !important;
+}
+
+.order-empty{
+    text-align: center;
+    margin-bottom: 100px;
 }
 
 footer{

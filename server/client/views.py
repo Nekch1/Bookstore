@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import CustomUser, Books, Genre, CartItem, Order, OrderItem
 from decimal import Decimal
 
-# Create your views here.
 def index_page(request):
     context = {
         "title_page" : "Главная страница" 
@@ -19,13 +18,11 @@ def catalog_page(request):
     sort = request.GET.get('sort')
     selected_genres = request.GET.getlist('genre')
 
-    books = Books.objects.all().order_by('-id')  # по умолчанию — новинки
+    books = Books.objects.all().order_by('-id')  
 
-    # фильтр по жанрам
     if selected_genres:
         books = books.filter(genre__name__in=selected_genres).distinct()
 
-    # сортировка
     if sort == 'price_asc':
         books = books.order_by('price')
     elif sort == 'price_desc':
@@ -52,7 +49,6 @@ def contacts_page(request):
     }
     return render(request,"contact.html", context)
 
-# @csrf_exempt
 def register_page(request):
     context = {
         'title_page' : 'Регистрация'
@@ -85,7 +81,6 @@ def register_page(request):
         return redirect('home')
     return render(request,"auth/register.html", context)
 
-# @csrf_exempt
 def login_page(request):
     context = {
         'title_page' : 'Авторизация'
@@ -106,10 +101,24 @@ def login_page(request):
 
 @login_required
 def profile_page(request):
+    orders = Order.objects.filter(user = request.user).order_by('-created_at')
     context = {
-        'title_page' : 'Профиль'
+        'title_page' : 'Профиль',
+        'orders': orders
     }
     return render(request,"profile.html", context)
+
+@login_required
+def delete_order(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id, user=request.user)
+    except Order.DoesNotExist:
+        return redirect("profile")
+
+    if not order.is_confirmed:  
+        order.delete()
+
+    return redirect("profile")
 
 @login_required
 def logout_func(request):
@@ -121,14 +130,12 @@ def admin_page(request):
     if request.user.role != 'admin':
         return redirect('home')  
 
-    # добавление жанра
     if request.method == "POST" and 'genre_submit' in request.POST:
         genre_name = request.POST.get('genre_name')
         if genre_name:
             Genre.objects.create(name=genre_name)
             return redirect('admin_dash')
 
-    # добавление книги
     if request.method == "POST" and 'book_submit' in request.POST:
         title = request.POST.get('title')
         description = request.POST.get('description')
@@ -157,7 +164,7 @@ def admin_page(request):
         return redirect('admin_dash')
 
     genres = Genre.objects.all()
-    books = Books.objects.all().order_by('-id')  # новые сверху
+    books = Books.objects.all().order_by('-id') 
 
     context = {
         'title_page': 'Панель администратора',
@@ -186,13 +193,12 @@ def add_to_cart(request, book_id):
     book = Books.objects.get(id=book_id)
     cart_item, created = CartItem.objects.get_or_create(user=request.user, book=book)
 
-    if not created:  # если элемент уже был в корзине
+    if not created: 
         if cart_item.quantity < book.quantity:
             cart_item.quantity += 1
             cart_item.save()
         else:
             return JsonResponse({"error": "Недостаточно книг в наличии"}, status=400)
-    # если создан — quantity уже = 1, ничего не трогаем
 
     return redirect('cart')
 
@@ -217,7 +223,6 @@ def update_cart_quantity(request, item_id):
 
     item.save()
 
-    # Считаем общую сумму корзины и возвращаем JSON
     cart_items = CartItem.objects.filter(user=request.user)
     total = sum(i.total_price() for i in cart_items)
 
