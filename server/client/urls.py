@@ -26,6 +26,10 @@ urlpatterns = [
     path('order/create/', views.create_order, name='create_order'),
 
 
+    path('adminDash/delete-book/<int:book_id>/', views.delete_book, name='delete_book'),
+    path('adminDash/edit-book/<int:book_id>/', views.edit_book, name='edit_book'),
+    path('adminDash/delete-genre/<int:genre_id>/', views.delete_genre, name='delete_genre'),
+
 ]
 
 if settings.DEBUG:

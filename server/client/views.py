@@ -110,15 +110,25 @@ def profile_page(request):
 
 @login_required
 def delete_order(request, order_id):
+    # только владелец заказа может отменить/удалить
     try:
         order = Order.objects.get(id=order_id, user=request.user)
     except Order.DoesNotExist:
         return redirect("profile")
 
-    if not order.is_confirmed:  
-        order.delete()
+    # разрешаем только POST (защита от CSRF) — если пришёл GET, просто редирект
+    if request.method != "POST":
+        return redirect("profile")
 
+    # если заказ ещё новый — помечаем как отменён пользователем
+    if order.status == 'new':
+        order.status = 'canceled'
+        # можно оставить место для причины, если захотите спрашивать у пользователя
+        order.cancel_reason = "Отменён пользователем"
+        order.save()
+    # если админ уже подтвердил или заказ в другом статусе — ничего не делаем
     return redirect("profile")
+
 
 @login_required
 def logout_func(request):
@@ -130,12 +140,14 @@ def admin_page(request):
     if request.user.role != 'admin':
         return redirect('home')  
 
+    # Добавление жанра
     if request.method == "POST" and 'genre_submit' in request.POST:
         genre_name = request.POST.get('genre_name')
         if genre_name:
             Genre.objects.create(name=genre_name)
             return redirect('admin_dash')
 
+    # Добавление книги
     if request.method == "POST" and 'book_submit' in request.POST:
         title = request.POST.get('title')
         description = request.POST.get('description')
@@ -157,21 +169,40 @@ def admin_page(request):
             image=image,
             quantity=quantity
         )
-
         if genres:
             book.genre.set(genres)
+        return redirect('admin_dash')
 
+    # Подтверждение заказа
+    if request.method == "POST" and 'confirm_order' in request.POST:
+        order_id = request.POST.get('order_id')
+        order = Order.objects.get(id=order_id)
+        order.status = 'confirmed'
+        order.save()
+        return redirect('admin_dash')
+
+    # Отмена заказа
+    if request.method == "POST" and 'cancel_order' in request.POST:
+        order_id = request.POST.get('order_id')
+        reason = request.POST.get('cancel_reason')
+        order = Order.objects.get(id=order_id)
+        order.status = 'canceled'
+        order.cancel_reason = reason
+        order.save()
         return redirect('admin_dash')
 
     genres = Genre.objects.all()
     books = Books.objects.all().order_by('-id') 
+    orders = Order.objects.all().order_by('-created_at')
 
     context = {
         'title_page': 'Панель администратора',
         'genres': genres,
-        'books': books
+        'books': books,
+        'orders': orders
     }
     return render(request, "admin-dashboard.html", context)
+
 
 def book_detail_page(request, book_id):
     book = Books.objects.get(id=book_id)
@@ -272,3 +303,57 @@ def order_confirm_page(request):
     cart_items = CartItem.objects.filter(user=request.user)
     total = sum(item.total_price() for item in cart_items)
     return render(request, "order_confirm.html", {"cart_items": cart_items, "total": total})
+
+
+@login_required
+def delete_book(request, book_id):
+    if request.user.role != 'admin':
+        return redirect('home')
+    try:
+        book = Books.objects.get(id=book_id)
+        book.delete()
+    except Books.DoesNotExist:
+        pass
+    return redirect('admin_dash')
+
+
+@login_required
+def edit_book(request, book_id):
+    if request.user.role != 'admin':
+        return redirect('home')
+    book = Books.objects.get(id=book_id)
+
+    if request.method == "POST":
+        book.title = request.POST.get('title')
+        book.description = request.POST.get('description')
+        book.author = request.POST.get('author')
+        book.price = request.POST.get('price')
+        book.country = request.POST.get('country')
+        book.year = request.POST.get('year')
+        book.quantity = request.POST.get('quantity')
+
+        image = request.FILES.get('image')
+        if image:
+            book.image = image
+
+        genres = request.POST.getlist('genres')
+        if genres:
+            book.genre.set(genres)
+
+        book.save()
+        return redirect('admin_dash')
+
+    # В этом коде редирект нужен только если кто-то попал по GET напрямую
+    return redirect('admin_dash')
+
+
+@login_required
+def delete_genre(request, genre_id):
+    if request.user.role != 'admin':
+        return redirect('home')
+    try:
+        genre = Genre.objects.get(id=genre_id)
+        genre.delete()
+    except Genre.DoesNotExist:
+        pass
+    return redirect('admin_dash')

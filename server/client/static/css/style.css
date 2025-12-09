@@ -172,12 +172,13 @@ section{
 
 .catalog-container {
   display: flex;
-  gap: 20px;
+  gap: 100px;
   margin: 20px;
+  /* justify-content: space-between; */
 }
 
 .filter-panel {
-  width: 280px;
+  width: 350px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 12px;
@@ -319,6 +320,14 @@ section{
 
 .btn-primary:hover{
     background-color: #3a3fc4 !important;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary{
+    border-radius: 10px;
+    background-color: var(--primary-color) !important;
+    border: none;
+    padding: 5px 10px;
     transition: all 0.3s ease;
 }
 
@@ -598,4 +607,42 @@ footer{
     fill:var(--primary-color) ;
 } 
 
+table, td, th {
+  border: 3px solid #d3d3d3 !important;
+}
 
+td, th {
+  text-align: center !important;
+  vertical-align: middle;
+}
+
+.table-head{
+    background-color: var(--primary-color); 
+    color: #fff;
+    height: 50px;
+}
+
+.table-head th{
+    text-align: center;
+    vertical-align: middle;
+}
+
+.admin-table-img{
+    width: 75px;
+}
+
+.modal-header{
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-edit{
+    border:2px solid #4e73df !important;
+    border-radius: 10px !important;
+}
+
+.btn-edit:hover{
+    border:2px solid #4e73df !important;
+    background-color: var(--primary-background-color);
+    color: #fff !important;
+}

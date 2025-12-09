@@ -22,16 +22,24 @@
                         {% endfor %}
                     </div>
 
-                    <div class="col-3 order-right">
+                    <div class="order-right col-3">
                         <div class="order-status">
-                            {% if order.is_confirmed %}
+                            {% if order.status == "confirmed" %}
                                 <div>Подтверждён</div>
+                            {% elif order.status == "canceled" %}
+                                <div class="text-danger">Отменён</div>
                             {% else %}
                                 <div>Новый</div>
                             {% endif %}
                         </div>
 
-                        {% if not order.is_confirmed %}
+                        {% if order.status == "canceled" and order.cancel_reason %}
+                            <div class="cancel-reason mt-2 text-danger" style="font-size:14px;">
+                                Причина отказа: {{ order.cancel_reason }}
+                            </div>
+                        {% endif %}
+
+                        {% if order.status == "new" %}
                             <button class="btn btn-danger delete-btn"
                                     data-order-id="{{ order.id }}"
                                     data-bs-toggle="modal"
@@ -40,6 +48,7 @@
                             </button>
                         {% endif %}
                     </div>
+
                 </div>
             </div>
             {% endfor %}
@@ -51,27 +60,26 @@
 
 
 
+<!-- Модалка подтверждения отмены заказа (в profile.html) -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Подтверждение удаления</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+      <form id="confirmDeleteForm" method="POST" action="#">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Подтверждение отмены</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
 
-      <div class="modal-body">
-        Вы уверены, что хотите удалить этот заказ?
-      </div>
+        <div class="modal-body">
+          Вы уверены, что хотите отменить этот заказ?
+        </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-
-        <a id="confirmDeleteBtn" href="#" class="btn btn-danger">
-          Удалить
-        </a>
-      </div>
-
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-danger">Отменить заказ</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -79,12 +87,14 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const deleteButtons = document.querySelectorAll(".delete-btn");
-    const confirmBtn = document.getElementById("confirmDeleteBtn");
+    const confirmForm = document.getElementById("confirmDeleteForm");
 
     deleteButtons.forEach(btn => {
         btn.addEventListener("click", function () {
             const orderId = this.dataset.orderId;
-            confirmBtn.href = `/profile/delete-order/${orderId}/`;
+            // подставляем action формы — относительный URL соответствует urls.py
+            confirmForm.action = `/profile/delete-order/${orderId}/`;
+            // откроется модалка автоматически (вы уже вызываете её через data-bs)
         });
     });
 });
